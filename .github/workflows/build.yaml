@@ -110,8 +110,6 @@ jobs:
           DEFAULT_BUMP: "${{ github.event.inputs.bump_type }}" 
       - name: Bump tag locally
         run: git tag ${{ steps.bumpTag.outputs.new_tag }}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to GHCR
