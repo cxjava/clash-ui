@@ -47,3 +47,65 @@ release:
   draft: true
   prerelease: auto
   name_template: "{{.ProjectName}}-v{{.Version}}-{{.Date}}"
+
+dockers:
+  - image_templates:
+      - "ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "ghcr.io/cxjava/{{ .ProjectName }}:latest-amd64"
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - --platform=linux/amd64
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://github.com/cxjava/{{ .ProjectName }}
+      - --label=org.opencontainers.image.source=https://github.com/cxjava/{{ .ProjectName }}
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z08:00" }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=MIT
+  - image_templates:
+      - "ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-arm64v8"
+      - "ghcr.io/cxjava/{{ .ProjectName }}:latest-arm64v8"
+    goarch: arm64
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - --platform=linux/arm64/v8
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://github.com/cxjava/{{ .ProjectName }}
+      - --label=org.opencontainers.image.source=https://github.com/cxjava/{{ .ProjectName }}
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z08:00" }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=MIT
+  - image_templates:
+      - "ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-armv7"
+      - "ghcr.io/cxjava/{{ .ProjectName }}:latest-armv7"
+    goarch: arm
+    goarm: 7
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - --platform=linux/arm/v7
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://github.com/cxjava/{{ .ProjectName }}
+      - --label=org.opencontainers.image.source=https://github.com/cxjava/{{ .ProjectName }}
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z08:00" }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses=MIT
+
+docker_manifests:
+  - name_template: ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}
+    image_templates:
+      - ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-amd64
+      - ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-arm64v8
+      - ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-armv7
+  - name_template: ghcr.io/cxjava/{{ .ProjectName }}:latest
+    image_templates:
+      - ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-amd64
+      - ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-arm64v8
+      - ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-armv7
