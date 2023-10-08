@@ -8,6 +8,11 @@ on:
   release:
     types: [created]
   workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Bump tag type: major, minor, patch. default: minor'
+        required: true
+        default: 'minor'
 
 jobs:
   build-clash:
@@ -87,9 +92,32 @@ jobs:
           path: yacd
       - uses: actions/setup-go@v4
         with:
-          go-version: "1.21"
+          go-version: stable
       - name: Environment
         run: |
           go mod tidy
+          rm -rf ./yacd/.git
+          rm -rf ./clash/.git
           ls -al ./yacd
           ls -al ./clash
+      - name: Bump tag version
+        id: bumpTag
+        uses: anothrNick/github-tag-action@1.67.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DRY_RUN: true
+          DEFAULT_BUMP: "${{ github.event.inputs.bump_type }}" 
+      - name: Bump tag locally
+        run: git tag ${{ steps.bumpTag.outputs.new_tag }}
+      - name: Set environment variables
+        run: |
+          echo "GOLANG_VERSION=$(go version)" >> $GITHUB_ENV
+          echo "BUILT_BY=$(whoami)@$(hostname)" >> $GITHUB_ENV
+      - uses: goreleaser/goreleaser-action@v5
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
