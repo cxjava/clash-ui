@@ -9,9 +9,8 @@ on:
     types: [created]
   workflow_dispatch:
 
-
 jobs:
-  build:
+  build-clash:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Dashboard code
@@ -22,7 +21,7 @@ jobs:
       - uses: pnpm/action-setup@v2
         with:
           version: latest
-      
+
       - name: Setup Nodejs
         uses: actions/setup-node@v3
         with:
@@ -33,7 +32,7 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
           pnpm build
-      
+
       - name: Deploy
         uses: crazy-max/ghaction-github-pages@v3
         with:
@@ -42,7 +41,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
-  install:
+  build-yacd:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -53,7 +52,7 @@ jobs:
         with:
           version: latest
           run_install: true
-      
+
       - name: Setup Nodejs
         uses: actions/setup-node@v3
         with:
@@ -62,7 +61,7 @@ jobs:
 
       - name: Build
         run: pnpm build
-    
+
       - name: Deploy
         uses: crazy-max/ghaction-github-pages@v3
         with:
@@ -70,3 +69,27 @@ jobs:
           build_dir: public
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
+  go-build:
+    runs-on: ubuntu-latest
+    name: go build
+    needs: [build-yacd, build-clash]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: cxjava/clash-ui
+          ref: clash
+          path: clash
+      - uses: actions/checkout@v4
+        with:
+          repository: cxjava/clash-ui
+          ref: yacd
+          path: yacd
+      - uses: actions/setup-go@v4
+        with:
+          go-version: "1.21"
+      - name: Environment
+        run: |
+          go mod tidy
+          ls -al ./yacd
+          ls -al ./clash

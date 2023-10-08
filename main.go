@@ -16,17 +16,20 @@ var yacd embed.FS
 var clash embed.FS
 
 var addr = flag.String("l", ":8088", "Listen address")
+var yacdPath = flag.String("y", "/y", "https://github.com/haishanh/yacd path")
+var clashPath = flag.String("c", "/c", "https://github.com/Dreamacro/clash-dashboard path ")
 
 func main() {
+	flag.Parse()
 	r := gin.Default()
 
-	// Go 的 `embed.FS` 保留了相对路径，因此 `fs` 内的路径是包含相对路径 `static` 的。
-	// 解决办法也很简单，使用 `io/fs` 里的 `Sub()` 函数返回所需的子目录的文件系统即可。
+	// Go's `embed.FS` preserves relative paths, so paths within `fs` contain the relative path `static`.
+	// The solution is simple: use the `Sub()` function in `io/fs` to return the filesystem of the desired subdirectory.
 	yacdRoot, _ := fs.Sub(yacd, "yacd")
-	r.StaticFS("/yacd", http.FS(yacdRoot))
+	r.StaticFS(*yacdPath, http.FS(yacdRoot))
 
 	clashRoot, _ := fs.Sub(clash, "clash")
-	r.StaticFS("/ui", http.FS(clashRoot))
+	r.StaticFS(*clashPath, http.FS(clashRoot))
 
 	r.Run(*addr)
 }
