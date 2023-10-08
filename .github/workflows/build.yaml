@@ -110,10 +110,12 @@ jobs:
           DEFAULT_BUMP: "${{ github.event.inputs.bump_type }}" 
       - name: Bump tag locally
         run: git tag ${{ steps.bumpTag.outputs.new_tag }}
-      - name: Set environment variables
-        run: |
-          echo "GOLANG_VERSION=$(go version)" >> $GITHUB_ENV
-          echo "BUILT_BY=$(whoami)@$(hostname)" >> $GITHUB_ENV
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: goreleaser/goreleaser-action@v5
         with:
           distribution: goreleaser

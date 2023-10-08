@@ -1,6 +1,6 @@
 FROM scratch
 WORKDIR /
-ADD clash-ui /clash-ui
-USER 1001
+ADD clash-ui /
+USER 1000
 EXPOSE 8088
 ENTRYPOINT ["/clash-ui"]
