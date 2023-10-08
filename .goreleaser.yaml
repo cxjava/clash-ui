@@ -16,7 +16,6 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
-    binary: clash-ui
     goos:
       - linux
       - windows
@@ -53,45 +52,31 @@ release:
   name_template: "{{.ProjectName}}-v{{.Version}}-{{.Date}}"
 
 dockers:
-  - image_templates:
+  - use: buildx
+    goos: linux
+    goarch: amd64
+    dockerfile: Dockerfile
+    image_templates:
       - "ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-amd64"
       - "ghcr.io/cxjava/{{ .ProjectName }}:latest-amd64"
-    dockerfile: Dockerfile
-    use: buildx
-    ids:
-      - clash-ui
     build_flag_templates:
       - --platform=linux/amd64
-  - image_templates:
-      - "ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-arm64v8"
-      - "ghcr.io/cxjava/{{ .ProjectName }}:latest-arm64v8"
+  - use: buildx
+    goos: linux
     goarch: arm64
     dockerfile: Dockerfile
-    use: buildx
-    ids:
-      - clash-ui
+    image_templates:
+      - "ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-arm64v8"
+      - "ghcr.io/cxjava/{{ .ProjectName }}:latest-arm64v8"
     build_flag_templates:
       - --platform=linux/arm64/v8
-  - image_templates:
-      - "ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-armv7"
-      - "ghcr.io/cxjava/{{ .ProjectName }}:latest-armv7"
-    goarch: arm
-    goarm: 7
-    dockerfile: Dockerfile
-    use: buildx
-    ids:
-      - clash-ui
-    build_flag_templates:
-      - --platform=linux/arm/v7
 
 docker_manifests:
   - name_template: ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}
     image_templates:
       - ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-amd64
       - ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-arm64v8
-      - ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-armv7
   - name_template: ghcr.io/cxjava/{{ .ProjectName }}:latest
     image_templates:
       - ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-amd64
       - ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-arm64v8
-      - ghcr.io/cxjava/{{ .ProjectName }}:{{ .Version }}-armv7
