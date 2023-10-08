@@ -1,7 +1,7 @@
 # clash-ui
 
-- visit [clash-dashboard](https://github.com/Dreamacro/clash-dashboard) ui: http://localhost:8088/c/
-- visit [yacd](https://github.com/haishanh/yacd) ui: http://localhost:8088/y/
+- Visit [clash-dashboard](https://github.com/Dreamacro/clash-dashboard) ui: http://localhost:8088/c/
+- Visit [yacd](https://github.com/haishanh/yacd) ui: http://localhost:8088/y/
 
 # Usage
 
