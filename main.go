@@ -31,5 +31,8 @@ func main() {
 	clashRoot, _ := fs.Sub(clash, "clash")
 	r.StaticFS(*clashPath, http.FS(clashRoot))
 
+	r.GET("/", func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, *yacdPath)
+	})
 	r.Run(*addr)
 }
