@@ -32,3 +32,15 @@ docker run -p 8088:8088 ghcr.io/cxjava/clash-ui
 #install to /usr/local/bin
 curl https://i.jpillora.com/cxjava/clash-ui! | bash
 ```
+
+## Via [goblin.run](https://goblin.run)
+
+```shell
+# binary will be /usr/local/bin/clash-ui
+curl -sSfL https://goblin.run/github.com/cxjava/clash-ui | sh
+
+# to put to a custom path
+curl -sSfL https://goblin.run/github.com/cxjava/clash-ui | PREFIX=/tmp sh
+```
+
+
