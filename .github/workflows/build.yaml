@@ -21,7 +21,7 @@ jobs:
       - name: Checkout Dashboard code
         uses: actions/checkout@v4
         with:
-          repository: Dreamacro/clash-dashboard
+          repository: chmod777john/clash-dashboard
 
       - uses: pnpm/action-setup@v2
         with:
