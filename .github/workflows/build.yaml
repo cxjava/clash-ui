@@ -91,7 +91,7 @@ jobs:
           repository: cxjava/clash-ui
           ref: yacd
           path: yacd
-      - uses: actions/setup-go@v4
+      - uses: actions/setup-go@v5
         with:
           go-version: stable
       - name: Environment
