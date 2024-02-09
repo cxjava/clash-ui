@@ -23,7 +23,7 @@ jobs:
         with:
           repository: chmod777john/clash-dashboard
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: latest
 
@@ -53,7 +53,7 @@ jobs:
         with:
           repository: haishanh/yacd
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: latest
 
