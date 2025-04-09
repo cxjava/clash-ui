@@ -5,8 +5,10 @@ import (
 	"flag"
 	"io/fs"
 	"net/http"
+	"path"
 
-	"github.com/gin-gonic/gin"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 //go:embed yacd/*
@@ -21,18 +23,25 @@ var clashPath = flag.String("c", "/c", "https://github.com/Dreamacro/clash-dashb
 
 func main() {
 	flag.Parse()
-	r := gin.Default()
 
-	// Go's `embed.FS` preserves relative paths, so paths within `fs` contain the relative path `static`.
-	// The solution is simple: use the `Sub()` function in `io/fs` to return the filesystem of the desired subdirectory.
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+
+	// Serve YACD static files
 	yacdRoot, _ := fs.Sub(yacd, "yacd")
-	r.StaticFS(*yacdPath, http.FS(yacdRoot))
+	yacdHandler := http.StripPrefix(*yacdPath, http.FileServer(http.FS(yacdRoot)))
+	r.Handle(path.Join(*yacdPath, "/"), yacdHandler)
 
+	// Serve Clash static files
 	clashRoot, _ := fs.Sub(clash, "clash")
-	r.StaticFS(*clashPath, http.FS(clashRoot))
+	clashHandler := http.StripPrefix(*clashPath, http.FileServer(http.FS(clashRoot)))
+	r.Handle(path.Join(*clashPath, "/"), clashHandler)
 
-	r.GET("/", func(c *gin.Context) {
-		c.Redirect(http.StatusMovedPermanently, *yacdPath)
+	// Redirect root to YACD
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, *yacdPath, http.StatusMovedPermanently)
 	})
-	r.Run(*addr)
+
+	// Start server
+	http.ListenAndServe(*addr, r)
 }
