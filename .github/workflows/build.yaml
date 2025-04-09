@@ -35,7 +35,7 @@ jobs:
 
       - name: Install package and build
         run: |
-          pnpm install --frozen-lockfile
+          pnpm install --no-frozen-lockfile
           pnpm build
 
       - name: Deploy
@@ -65,7 +65,7 @@ jobs:
 
       - name: Install package and build
         run: |
-          pnpm install --frozen-lockfile
+          pnpm install --no-frozen-lockfile
           pnpm build
 
       - name: Deploy
