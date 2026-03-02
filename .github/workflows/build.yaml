@@ -39,7 +39,7 @@ jobs:
           pnpm build
 
       - name: Deploy
-        uses: crazy-max/ghaction-github-pages@v4
+        uses: crazy-max/ghaction-github-pages@v5
         with:
           target_branch: clash
           build_dir: dist
@@ -69,7 +69,7 @@ jobs:
           pnpm build
 
       - name: Deploy
-        uses: crazy-max/ghaction-github-pages@v4
+        uses: crazy-max/ghaction-github-pages@v5
         with:
           target_branch: yacd
           build_dir: public
